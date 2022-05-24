@@ -21,16 +21,19 @@ namespace Loby.AspNetCore.Extensions
         /// <returns>
         /// Returns the current instance of <see cref="ModelStateDictionary"/> that error messages are added to it.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// The modelState or errorMessages is null.
+        /// </exception>
         public static ModelStateDictionary AddErrors(this ModelStateDictionary modelState, IEnumerable<string> errorMessages)
         {
-            if(modelState == null)
+            if (modelState == null)
             {
-                throw new NullReferenceException(nameof(modelState));
+                throw new ArgumentNullException(nameof(modelState));
             }
 
             if (errorMessages == null)
             {
-                throw new NullReferenceException(nameof(errorMessages));
+                throw new ArgumentNullException(nameof(errorMessages));
             }
 
             foreach (var error in errorMessages)
@@ -50,11 +53,14 @@ namespace Loby.AspNetCore.Extensions
         /// <returns>
         /// Returns a collection that containing all model state distinct error messages.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// The modelState is null.
+        /// </exception>
         public static IEnumerable<string> GetErrorMessages(this ModelStateDictionary modelState)
         {
             if (modelState == null)
             {
-                throw new NullReferenceException(nameof(modelState));
+                throw new ArgumentNullException(nameof(modelState));
             }
 
             return modelState.SelectMany(x => x.Value.Errors.Select(x => x.ErrorMessage)).Distinct();

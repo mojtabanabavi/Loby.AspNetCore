@@ -19,6 +19,9 @@ namespace Loby.AspNetCore.Extensions
         /// Returns true if the specified HTTP request is an AJAX request; 
         /// otherwise, false.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// The httpRequest is null.
+        /// </exception>
         public static bool IsAjaxRequest(this HttpRequest httpRequest)
         {
             if (httpRequest == null)
@@ -43,6 +46,9 @@ namespace Loby.AspNetCore.Extensions
         /// <returns>
         /// Returns An string representing root url of application.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// The httpRequest is null.
+        /// </exception>
         public static string GetBaseUrl(this HttpRequest httpRequest)
         {
             if (httpRequest == null)
