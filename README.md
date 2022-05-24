@@ -12,20 +12,22 @@ Visit the **[documentation](https://github.com/mojtabanabavi/loby.AspNetCore/wik
 
 Nuget Package Manager:
 ```shell
-PM> Install-Package Loby.AspNetCore -Version 0.1.0
+PM> Install-Package Loby.AspNetCore -Version 1.0.0
 ```
 .NET CLI:
 ```ps
-PS> dotnet add package Loby.AspNetCore --version 0.1.0
+PS> dotnet add package Loby.AspNetCore --version 1.0.0
 ```
 
 ## Benefits and features
 
 * Easy installation
 * Free and open-source
-* Includes useful tools such as:
+* Contains useful helpers such as:
     * MimeParser
-* Includes useful services such as:
-    * ControllerDiscoveryService
-* Includes useful extensions for:
+* Contains useful services such as:
+    * ControllerDiscovery
+* Contains useful extension methods for:
+    * HttpRequest
+    * HttpResponse
     * ModelStateDictionary
