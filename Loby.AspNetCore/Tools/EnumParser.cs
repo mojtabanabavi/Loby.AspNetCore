@@ -19,8 +19,10 @@ namespace Loby.AspNetCore.Tools
         /// A type representing an enum.
         /// </typeparam>
         /// <returns>
-        /// Returns a new instance of <see cref="SelectList"/> that 
-        /// created based on <typeparamref name="T"/>.
+        /// Returns a new instance of <see cref="SelectList"/> that is created 
+        /// based on <typeparamref name="T"/> which the value is the number assigned 
+        /// to each field and text is <see cref="DescriptionAttribute.Description"/>, if 
+        /// it's defined; otherwise the name of field.
         /// </returns>
         /// <exception cref="ArgumentException">
         /// T is not an enum.
@@ -31,7 +33,7 @@ namespace Loby.AspNetCore.Tools
         }
 
         /// <summary>
-        /// Creates a <see cref="SelectList"/> from an enum.
+        /// Creates a select list from an enum.
         /// </summary>
         /// <typeparam name="T">
         /// A type representing an enum.
@@ -40,8 +42,10 @@ namespace Loby.AspNetCore.Tools
         /// An object representing the selected value.
         /// </param>
         /// <returns>
-        /// Returns a new instance of <see cref="SelectList"/> that 
-        /// created based on <typeparamref name="T"/>.
+        /// Returns a new instance of <see cref="SelectList"/> that is created 
+        /// based on <typeparamref name="T"/> which the value is the number assigned 
+        /// to each field and text is <see cref="DescriptionAttribute.Description"/>, if 
+        /// it's defined; otherwise the name of field.
         /// </returns>
         /// <exception cref="ArgumentException">
         /// T is not an enum.
@@ -58,7 +62,7 @@ namespace Loby.AspNetCore.Tools
                 .Cast<Enum>()
                 .Select(e => new SelectListItem
                 {
-                    Text = GetDisplayName(e),
+                    Text = GetDescription(e),
                     Value = (Convert.ToInt32(e)).ToString(),
                 });
 
@@ -66,15 +70,16 @@ namespace Loby.AspNetCore.Tools
         }
 
         /// <summary>
-        /// Creates a <see cref="Dictionary{int, string}"/> from an enum.
+        /// Creates a dictionary from an enum.
         /// </summary>
-        /// <param name="value">
-        /// An enum to convert.
-        /// </param>
+        /// <typeparam name="T">
+        /// A type representing an enum.
+        /// </typeparam>
         /// <returns>
-        /// Returns a new instance of <see cref="Dictionary{int, string}"/> that created 
-        /// based on <typeparamref name="T"/> which the key is a number and value is a suitable 
-        /// display name that are assigned to each field.
+        /// Returns a new instance of <see cref="Dictionary{int, string}"/> that is 
+        /// created based on <typeparamref name="T"/> which the key is the number assigned 
+        /// to each field and value is <see cref="DescriptionAttribute.Description"/>, if 
+        /// it's defined; otherwise the name of field.
         /// </returns>
         /// <exception cref="ArgumentException">
         /// T is not an enum.
@@ -89,47 +94,29 @@ namespace Loby.AspNetCore.Tools
             return Enum
                 .GetValues(typeof(T))
                 .Cast<Enum>()
-                .ToDictionary(e => Convert.ToInt32(e), e => GetDisplayName(e));
+                .ToDictionary(e => Convert.ToInt32(e), e => GetDescription(e));
         }
 
         /// <summary>
-        /// Returns a display name for the current enum field.
+        /// Returns the description value of <see cref="DescriptionAttribute"/> 
+        /// that is used on current object.
         /// </summary>
         /// <param name="value">
         /// An enum field.
         /// </param>
         /// <returns>
-        /// Returns the value of <see cref="DisplayNameAttribute.DisplayName"/> 
-        /// or <see cref="DescriptionAttribute.Description"/> if this attributes 
-        /// are used for the current field, otherwise, an string representation of 
-        /// <paramref name="value"/>.
+        /// The value of <see cref="DescriptionAttribute.Description"/> that is 
+        /// used on current field if it's defined; otherwise the name of field.
         /// </returns>
-        private static string GetDisplayName(Enum value)
+        private static string GetDescription(Enum value)
         {
-            var enumField = value
+            var attribute = value
                 .GetType()
-                .GetField(value.ToString());
-
-            var displayNameAttribute = enumField
-                .GetCustomAttributes<DisplayNameAttribute>(false)
-                .FirstOrDefault();
-
-            var descriptionAttribute = enumField
+                .GetField(value.ToString())
                 .GetCustomAttributes<DescriptionAttribute>(false)
                 .FirstOrDefault();
 
-            if (displayNameAttribute != null)
-            {
-                return displayNameAttribute.DisplayName;
-            }
-            else if (descriptionAttribute != null)
-            {
-                return descriptionAttribute.Description;
-            }
-            else
-            {
-                return value.ToString();
-            }
+            return attribute != null ? attribute.Description : value.ToString();
         }
     }
 }
