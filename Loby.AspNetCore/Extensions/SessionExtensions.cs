@@ -22,11 +22,8 @@ namespace Loby.AspNetCore.Extensions
         /// <param name="value">
         /// The data that is going to store in session.
         /// </param>
-        /// <exception cref="ArgumentException">
-        /// The key is null or empty or white space.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
-        /// The session or value is null.
+        /// The session or key or value is null.
         /// </exception>
         public static void SetObject(this ISession session, string key, object value)
         {
@@ -35,9 +32,9 @@ namespace Loby.AspNetCore.Extensions
                 throw new ArgumentNullException(nameof(session));
             }
 
-            if (string.IsNullOrWhiteSpace(key))
+            if (key == null)
             {
-                throw new ArgumentException($"{nameof(key)} is null or empty or white space.");
+                throw new ArgumentNullException(nameof(key));
             }
 
             if (value == null)
@@ -67,11 +64,8 @@ namespace Loby.AspNetCore.Extensions
         /// to the <paramref name="key"/>, if present; otherwise, the default 
         /// value for <typeparamref name="T"/>.
         /// </returns>
-        /// <exception cref="ArgumentException">
-        /// The key is null or empty or white space.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
-        /// The session is null.
+        /// The session or key is null.
         /// </exception>
         /// <exception cref="InvalidOperationException">
         /// The value could not be converted to <typeparamref name="T"/>.
@@ -83,9 +77,9 @@ namespace Loby.AspNetCore.Extensions
                 throw new ArgumentNullException(nameof(session));
             }
 
-            if (string.IsNullOrWhiteSpace(key))
+            if (key == null)
             {
-                throw new ArgumentException($"{nameof(key)} is null or empty or white space.");
+                throw new ArgumentNullException(nameof(key));
             }
 
             var jsonData = session.GetString(key);
