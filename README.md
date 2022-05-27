@@ -25,9 +25,12 @@ PS> dotnet add package Loby.AspNetCore --version 1.0.0
 * Free and open-source
 * Contains useful helpers such as:
     * MimeParser
+    * EnumParser
 * Contains useful services such as:
     * ControllerDiscovery
 * Contains useful extension methods for:
+    * HttpClient
     * HttpRequest
     * HttpResponse
     * ModelStateDictionary
+    * Session
