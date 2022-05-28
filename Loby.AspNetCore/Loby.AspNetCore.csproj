@@ -5,14 +5,13 @@
 		<Product>$(AssemblyName)</Product>
 		<PackageId>$(AssemblyName)</PackageId>
 		<Copyright>Copyright © Mojtaba Nabavi 2021</Copyright>
-		<Description>This project is a free, useful and open-source library that includes some useful extension methods and tools. It's a part of Loby library that focuses on Asp.Net Core framework.</Description>
-
+		<Description>This project is a free, useful and open-source library that contains some useful services, helpers and extension methods. It's a part of Loby library that focuses on Asp.Net Core framework.</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/mojtabanabavi/Loby.AspNetCore</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/mojtabanabavi/Loby.AspNetCore</PackageProjectUrl>
-		<PackageReleaseNotes>https://github.com/mojtabanabavi/loby/releases/tag/v1.0.0</PackageReleaseNotes>
-		<PackageTags>loby csharp dotnet dotnetcore aspnetcore extensions services mime-parser controller-discovery</PackageTags>
+		<PackageReleaseNotes>https://github.com/mojtabanabavi/Loby.AspNetCore/releases/tag/v1.0.0</PackageReleaseNotes>
+		<PackageTags>loby csharp dotnet dotnetcore aspnetcore helpers extensions services mime-parser enum-parser controller-discovery</PackageTags>
 
 		<Version>1.0.0</Version>
 		<FileVersion>1.0.0</FileVersion>
