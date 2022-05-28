@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Loby.AspNetCore.Tools
+namespace Loby.AspNetCore.Helpers
 {
     /// <summary>
     /// Provides a two-way mapping of file extensions to mime types and mime types to file extensions.

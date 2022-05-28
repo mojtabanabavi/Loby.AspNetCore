@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Loby.AspNetCore.Tools
+namespace Loby.AspNetCore.Helpers
 {
     /// <summary>
     /// Provide capability to convert enums to some other types.
