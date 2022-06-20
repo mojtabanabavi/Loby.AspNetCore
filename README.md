@@ -31,10 +31,11 @@ PS> dotnet add package Loby.AspNetCore
     * MimeParser
     * EnumParser
 * Contains useful services:
+    * RazorViewRender
     * ControllerDiscovery
 * Contains useful extension methods:
+    * Session
     * HttpClient
     * HttpRequest
     * HttpResponse
     * ModelStateDictionary
-    * Session
