@@ -2,13 +2,11 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Loby.AspNetCore.Services
 {
@@ -17,12 +15,17 @@ namespace Loby.AspNetCore.Services
     /// </summary>
     public class RazorViewRenderService : IRazorViewRenderService
     {
+        private readonly ActionContext _actionContext;
         private readonly IRazorViewEngine _razorEngine;
-        private readonly IServiceProvider _serviceProvider;
         private readonly ITempDataProvider _tempDataProvider;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RazorViewRenderService(IRazorViewEngine razorEngine, ITempDataProvider tempDataProvider, IServiceProvider serviceProvider, IHttpContextAccessor httpContextAccessor)
+        /// <summary>
+        /// Initializes a new instance of <see cref="RazorViewRenderService"/>.
+        /// </summary>
+        /// <param name="razorEngine"></param>
+        /// <param name="tempDataProvider"></param>
+        /// <param name="actionContextAccessor"></param>
+        public RazorViewRenderService(IRazorViewEngine razorEngine, ITempDataProvider tempDataProvider, IActionContextAccessor actionContextAccessor)
         {
             if (razorEngine == null)
             {
@@ -34,15 +37,14 @@ namespace Loby.AspNetCore.Services
                 throw new ArgumentNullException(nameof(tempDataProvider));
             }
 
-            if (serviceProvider == null)
+            if (actionContextAccessor == null)
             {
-                throw new ArgumentNullException(nameof(serviceProvider));
+                throw new ArgumentNullException(nameof(actionContextAccessor));
             }
 
             _razorEngine = razorEngine;
-            _serviceProvider = serviceProvider;
             _tempDataProvider = tempDataProvider;
-            _httpContextAccessor = httpContextAccessor;
+            _actionContext = actionContextAccessor.ActionContext;
         }
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace Loby.AspNetCore.Services
         /// </exception>
         public Task<string> RenderAsync(string viewName)
         {
-            return RenderAsync(viewName, string.Empty);
+            return RenderAsync(viewName, default);
         }
 
         /// <summary>
@@ -79,9 +81,7 @@ namespace Loby.AspNetCore.Services
         /// </exception>
         public async Task<string> RenderAsync(string viewName, object model)
         {
-            var actionContext = GetActionContext();
-
-            var viewEngineResult = _razorEngine.FindView(actionContext, viewName, isMainPage: false);
+            var viewEngineResult = _razorEngine.FindView(_actionContext, viewName, isMainPage: false);
 
             if (!viewEngineResult.Success)
             {
@@ -94,7 +94,7 @@ namespace Loby.AspNetCore.Services
             }
 
             var view = viewEngineResult.View;
-            var tempDataDictionary = new TempDataDictionary(actionContext.HttpContext, _tempDataProvider);
+            var tempDataDictionary = new TempDataDictionary(_actionContext.HttpContext, _tempDataProvider);
             var viewDataDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
             {
                 Model = model,
@@ -102,36 +102,12 @@ namespace Loby.AspNetCore.Services
 
             using (var output = new StringWriter())
             {
-                var viewContext = new ViewContext(actionContext, view, viewDataDictionary, tempDataDictionary, output, new HtmlHelperOptions());
+                var viewContext = new ViewContext(_actionContext, view, viewDataDictionary, tempDataDictionary, output, new HtmlHelperOptions());
 
                 await view.RenderAsync(viewContext);
 
                 return output.ToString();
             }
-        }
-
-        /// <summary>
-        /// Creates or gets context object for execution of action which has been 
-        /// selected as part of an HTTP request.
-        /// </summary>
-        /// <returns>
-        /// An instance of <see cref="ActionContext"/> that is used for rendering views.
-        /// </returns>
-        private ActionContext GetActionContext()
-        {
-            var httpContext = _httpContextAccessor?.HttpContext;
-
-            if (httpContext != null)
-            {
-                return new ActionContext(httpContext, httpContext.GetRouteData(), new ActionDescriptor());
-            }
-
-            httpContext = new DefaultHttpContext
-            {
-                RequestServices = _serviceProvider
-            };
-
-            return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
         }
     }
 }

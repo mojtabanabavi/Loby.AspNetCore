@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Loby.AspNetCore.Services
 {
+    /// <summary>
+    /// Defines the contract for services that provide rendering for pages with the Razor syntax.
+    /// </summary>
     public interface IRazorViewRenderService
     {
         /// <summary>
